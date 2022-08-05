@@ -4,12 +4,14 @@ import contacts from '../data/contacts.json'
 import Container from "./Container";
 import Form from "./BookContacts/Form";
 import ListContact from "./BookContacts/ListContact";
+import Filter from "./BookContacts/Filter";
 
 
 class App extends Component {
 
   state = {
-    contacts
+    contacts,
+    filter: ''
   };
 
   addContact = ({ name, number }) => {
@@ -42,13 +44,22 @@ class App extends Component {
     }));
   }
 
+  filterContacts = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  
+
+
   render() { 
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
+
+    const filterContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLocaleLowerCase()));
     return (
       <Container>
         <h1>PhoneBook</h1>
         <Form onSubmit={this.addContact} />
-        <ListContact contacts={contacts} deleteContact={this.deleteContact} />
+        <Filter onChange={this.filterContacts} value={filter} />
+        <ListContact contacts={filterContacts} deleteContact={this.deleteContact} />
       </Container>
     )
   }
